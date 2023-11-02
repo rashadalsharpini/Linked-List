@@ -24,4 +24,3 @@ void LinkedList::insert_end(int value) {
         tail = item;
     }
 }
-_
