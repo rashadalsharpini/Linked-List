@@ -4,7 +4,8 @@
 
 #ifndef LINKEDLIST_LINKEDLIST_H
 #define LINKEDLIST_LINKEDLIST_H
-
+#include<iostream>
+using namespace std;
 struct Node{
     int data;
     Node* next;
@@ -12,7 +13,12 @@ struct Node{
 };
 class LinkedList {
 private:
-
+    Node* head{};
+    Node* tail{};
+    int length = 0;
+public:
+    void print1();
+    void insert_end(int value);
 };
 
 
