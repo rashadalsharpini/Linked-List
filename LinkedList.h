@@ -19,6 +19,10 @@ private:
 public:
     void print1();
     void insert_end(int value);
+    Node* get_nth(int n);
+    int Search(int value);
+    int improvedSearchV1(int value);
+    int improvedSearchV2(int value); // the same as v1 the difference is the writing
 };
 
 
