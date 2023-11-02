@@ -1,0 +1,4 @@
+# ninja log v5
+0	27	1698906840541220318	CMakeFiles/LinkedList.dir/LinkedList.cpp.o	c17eae205c957577
+0	506	1698906841021241277	CMakeFiles/LinkedList.dir/main.cpp.o	562e8a86b4e0e55f
+507	594	1698906841107911768	LinkedList	43661a4d325fb4c9
