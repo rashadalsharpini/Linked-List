@@ -1,8 +1,17 @@
 //
 // Created by rashadalsharpini on 02/11/23.
 //
+// ninja: no work to do.
 
 #include "LinkedList.h"
+LinkedList::~LinkedList() {
+    while(head){
+        Node*current = head->next;
+        delete head;
+        head=current;
+    }
+}
+
 void LinkedList::print1() {
     for(Node*cur=head;cur;cur = cur->next){
         cout<<cur->data<<" ";
@@ -17,6 +26,18 @@ void LinkedList::insert_end(int value) {
         tail->next = item;
         tail = item;
     }
+    length++;
+}
+void LinkedList::insert_front(int value) {
+    Node* item = new Node(value);
+//    add_node(item);
+    if(!head)
+        head = tail = item;
+    else{
+        item->next = head;
+        head = item;
+    }
+//    debug_verify_data_integrity();
 }
 Node* LinkedList::get_nth(int n) {
     int cnt = 0;
@@ -126,7 +147,46 @@ void LinkedList::debug_print_node(Node *node, bool is_seperate) {
 void LinkedList::debug_print_list(string msg) {
     if(msg !="")
         cout<<msg<<endl;
-    for(int i=0;i<(int)debug_data.size();i++)
+     for(int i=0;i<(int)debug_data.size();i++)
         debug_print_node(debug_data[i]);
     cout<<"************************\n"<<flush;
 }
+
+void LinkedList::delete_front() {
+    assert(length);
+    Node*cur=head->next;
+//    delete_node(head);
+    head=cur;
+    debug_verify_data_integrity();
+}
+Node* LinkedList::get_nth_back(int n) {
+    if(length<n)
+        return nullptr;
+    return get_nth(length - n + 1);
+}
+bool LinkedList::is_same1(const LinkedList &other) {
+    Node*h1=head,*h2=other.head;
+    while(h1&&h2){
+        if(h1->data!=h2->data)
+            return false;
+        h1=h1->next,h2=h2->next;
+    }
+    return !h1 && !h2;
+}
+bool LinkedList::is_same(const LinkedList &other) {
+    if(length != other.length)
+        return false;
+    Node*other_h=other.head;
+    for(Node*cur_h=head;cur_h;cur_h=cur_h->next){
+        if(cur_h->data!=other_h->data)
+            return false;
+        other_h=other_h->next;
+    }
+    return true;
+}
+void LinkedList::add_element(int value) {
+    Node*item = new Node(value);
+    item->next=head;
+    head=item;
+}
+
