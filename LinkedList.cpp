@@ -30,13 +30,14 @@ void LinkedList::insert_end(int value) {
 }
 void LinkedList::insert_front(int value) {
     Node* item = new Node(value);
-//    add_node(item);
+
     if(!head)
         head = tail = item;
     else{
         item->next = head;
         head = item;
     }
+    debug_add_node(item);
 //    debug_verify_data_integrity();
 }
 Node* LinkedList::get_nth(int n) {
@@ -151,14 +152,6 @@ void LinkedList::debug_print_list(string msg) {
         debug_print_node(debug_data[i]);
     cout<<"************************\n"<<flush;
 }
-
-void LinkedList::delete_front() {
-    assert(length);
-    Node*cur=head->next;
-//    delete_node(head);
-    head=cur;
-    debug_verify_data_integrity();
-}
 Node* LinkedList::get_nth_back(int n) {
     if(length<n)
         return nullptr;
@@ -189,4 +182,25 @@ void LinkedList::add_element(int value) {
     item->next=head;
     head=item;
 }
-
+void LinkedList::delete_node(Node *node) {
+    debug_remove_node(node);
+    --length;
+    delete node;
+}
+void LinkedList::delete_front() {
+    assert(length);
+    Node*cur=head->next;
+    delete_node(head);
+    head=cur;
+    debug_verify_data_integrity();
+}
+void LinkedList::delete_first() {
+    if(head){
+        Node* cur=head;
+        head=head->next;
+        delete_node(cur);
+        if(!head)
+            tail= nullptr;
+        debug_verify_data_integrity();
+    }
+}

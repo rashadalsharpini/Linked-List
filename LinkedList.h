@@ -47,9 +47,11 @@ public:
     bool is_same(const LinkedList&other);
     void add_element(int value);
     void delete_front();
+    void delete_first();
     void delete_end();
     void delete_nth(int index);
     void delete_value(int value);
+    void delete_node(Node*node);
 };
 
 
