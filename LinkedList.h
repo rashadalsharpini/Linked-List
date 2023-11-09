@@ -52,6 +52,10 @@ public:
     void delete_nth(int index);
     void delete_value(int value);
     void delete_node(Node*node);
+    void swap_pair();
+    void reverse_nodes();
+    void insert_sorted(int value);
+    void embed_after(Node*node,int value);
 };
 
 

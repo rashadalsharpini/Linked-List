@@ -20,10 +20,10 @@ void test1(){
 }
 int main() {
     LinkedList ll;
-    for(int i =0;i<10;++i)
+    for(int i =0;i<8;++i)
         ll.insert_end(i);
     ll.print1();
-    ll.insert_front(123);
+    ll.reverse_nodes();
     ll.print1();
     cout<<"\n\n No run time error\n";
     return 0;

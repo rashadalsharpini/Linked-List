@@ -38,7 +38,7 @@ void LinkedList::insert_front(int value) {
         head = item;
     }
     debug_add_node(item);
-//    debug_verify_data_integrity();
+    debug_verify_data_integrity();
 }
 Node* LinkedList::get_nth(int n) {
     int cnt = 0;
@@ -83,25 +83,27 @@ int LinkedList::improvedSearchV2(int value) {
     return -1;
 }
 void LinkedList::debug_verify_data_integrity() {
-    if(length == 0){
-        assert(head == nullptr);
-        assert(tail == nullptr);
-    }else{
-        assert(head != nullptr);
-        assert(tail != nullptr);
-        if(length==1)
-            assert(head == tail);
-        else
-            assert(head!=tail);
+    // calling it after doing any operation
+    // to make sure that our list isn't corrupted
+    if (length == 0)
+        assert(head == nullptr && tail == nullptr);
+
+    if (length) {
+        assert(head != nullptr && tail != nullptr);
         assert(!tail->next);
     }
-    int len = 0;
-    for(Node* cur=head;cur;cur=cur->next)
-        assert(len<10000);
-    assert(length==len);
-    assert(length==(int)debug_data.size());
 
+    if (length == 1)
+        assert(head == tail);
+
+
+    int cur_length = 0;
+    for (Node* cur = head; cur; cur = cur->next, cur_length++)
+        assert(cur_length < 10000); // handling infinite cycle
+
+    assert(cur_length == length);
 }
+
 
 string LinkedList::debug_to_string() {
         if(length==0)
@@ -203,4 +205,89 @@ void LinkedList::delete_first() {
             tail= nullptr;
         debug_verify_data_integrity();
     }
+}
+
+void LinkedList::delete_end() {
+    if(length<=1){
+        delete_first();
+        return;
+    }
+    Node*previous= get_nth(length-1);
+    delete_node(tail);
+    tail=previous;
+    tail->next= nullptr;
+    debug_verify_data_integrity();
+}
+void LinkedList::delete_nth(int index) {
+    if(index<1||index>length)
+        cout<<"Error. No such nth node\n";
+    else if(index==1)
+        delete_first();
+    else{
+        Node*before= get_nth(index-1);
+        Node*nth=before->next;
+        bool is_tail=nth==tail;
+        before->next=nth->next;
+        if(is_tail)
+            tail=before;
+        delete_node(nth);
+        debug_verify_data_integrity();
+    }
+}
+void LinkedList::delete_value(int value) {
+    int cnt = 0;
+    for(Node*cur=head;cur;cur=cur->next){
+        cnt++;
+        if(cur->data==value)
+            break;
+
+    }
+    delete_nth(cnt);
+}
+void LinkedList::swap_pair() {
+    for(Node*cur=head;cur;cur=cur->next){
+        if(cur->next) {
+            swap(cur->data, cur->next->data);
+            // I forgot about the two steps move because I supposed to swap each pair
+            cur=cur->next;
+        }
+    }
+}
+void LinkedList::reverse_nodes() {
+    if(length<=1)
+        return;
+    tail=head;
+    Node*prv=head;
+    head=head->next;
+    while(head){
+        Node*next=head->next;
+        head->next=prv;
+        prv=head;
+        head=next;
+    }
+    head=prv;
+    tail->next=nullptr;
+    debug_verify_data_integrity();
+}
+void LinkedList::embed_after(Node *node, int value) {
+    Node*item=new Node(value);
+    ++length;
+    debug_add_node(item);
+    item->next=node->next;
+    node->next=item;
+}
+void LinkedList::insert_sorted(int value) {
+    if(!length||value<=head->data)
+        insert_front(value);
+    else if(tail->data<=value)
+        insert_end(value);
+    else{
+        for(Node*cur=head,*prv= nullptr;cur;prv=cur,cur=cur->next){
+            if(value<=cur->data){
+                embed_after(prv,value);
+                break;
+            }
+        }
+    }
+    debug_verify_data_integrity();
 }
