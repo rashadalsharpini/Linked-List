@@ -9,6 +9,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include<climits>
 using namespace std;
 struct Node{
     int data;
@@ -24,6 +25,7 @@ private:
     Node* tail{};
     int length = 0;
 public:
+    vector<Node*> debug_data;
     LinkedList(){};
     LinkedList(const LinkedList&) = delete;
     LinkedList&operator=(const LinkedList &another) = delete;
@@ -38,7 +40,6 @@ public:
     Node* get_nth_back(int n);
     void debug_verify_data_integrity();
     string debug_to_string();
-    vector<Node*> debug_data;
     void debug_add_node(Node*node);
     void debug_remove_node(Node*node);
     void debug_print_node(Node* node,bool is_seperate = false);
@@ -56,6 +57,17 @@ public:
     void reverse_nodes();
     void insert_sorted(int value);
     void embed_after(Node*node,int value);
+    void swap_head_tail();
+    void left_rotate(int k);
+    void remove_duplicates_from_not_sorted();
+    void delete_last_occurence(int target);
+    void delete_next_node(Node* node);
+    void move_key_occurance_to_end(int key);
+    Node* move_to_end(Node* cur, Node* prv);
+    int max(Node*head= nullptr,bool is_first_call=true);
+    void odd_pos_even_pos();
+    void insert_alternate(LinkedList&another);
+    void insert_after(Node*src,Node*target);
 };
 
 

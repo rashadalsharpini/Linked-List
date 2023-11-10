@@ -291,3 +291,144 @@ void LinkedList::insert_sorted(int value) {
     }
     debug_verify_data_integrity();
 }
+void LinkedList::swap_head_tail() {
+    if(!head||!head->next)
+        return;
+    Node*prv= get_nth(length-1);
+    tail->next=head->next;
+    prv->next=head;
+    head->next= nullptr;
+    swap(tail,head);
+    debug_verify_data_integrity();
+}
+void LinkedList::left_rotate(int k) {
+     if(length<=1||k%length==0)
+         return;
+     k%=length;
+     Node*nth= get_nth(k);
+     tail->next=head;
+     tail=nth;
+     head=nth->next;
+     tail->next= nullptr;
+     debug_verify_data_integrity();
+}
+
+void LinkedList::remove_duplicates_from_not_sorted() {
+    if(length<=1)
+        return;
+    for(Node*cur1=head;cur1;cur1=cur1->next){
+        for(Node*cur2=cur1->next,*prv=cur1;cur2;){
+            if(cur1->data==cur2->data){
+                delete_next_node(prv);
+                cur2=prv->next;
+            }else
+                prv=cur2,cur2=cur2->next;
+        }
+    }
+    debug_verify_data_integrity();
+}
+void LinkedList::delete_last_occurence(int target) {
+    if(!length)
+        return;
+    Node*delete_my_next_node = nullptr;
+    bool is_found = false;
+    for(Node *cur = head, *prv = nullptr; cur; prv = cur, cur = cur->next)
+        if(cur->data==target)
+            is_found=true,delete_my_next_node=prv;
+    if(is_found){
+        if(delete_my_next_node)
+            delete_next_node(delete_my_next_node);
+        else
+            delete_front();
+    }
+    debug_verify_data_integrity();
+}
+
+void LinkedList::delete_next_node(Node *node) {
+    Node* to_delete = node->next;
+    bool is_tail = to_delete == tail;
+    node->next = node->next->next;
+    delete_node(to_delete);
+    if(tail)
+        tail = node;
+}
+void LinkedList::move_key_occurance_to_end(int key) {
+    if(length<=1)
+        return;
+    int len=length;
+    for(Node*cur=head,*prv= nullptr;len--;){
+        if(cur->data==key)
+            cur=move_to_end(cur,prv);
+        else
+            prv=cur,cur=cur->next;
+    }
+    debug_verify_data_integrity();
+}
+
+Node *LinkedList::move_to_end(Node *cur, Node *prv){
+    Node* next = cur->next;
+    tail-> next = cur;
+    if (prv)
+        prv->next = next;
+    else
+        head = next;
+    tail = cur;
+    tail->next = nullptr;
+    return next;
+}
+
+int LinkedList::max(Node *head, bool is_first_call) {
+    if(is_first_call)
+        return this->max(this->head,false);
+    if(head== nullptr)
+        return INT_MIN;
+    return std::max(head->data,this->max(head->next,false));
+}
+void LinkedList::odd_pos_even_pos() {
+    if(length<=2)
+        return;
+    Node*first_even=head->next;
+    Node*cur_odd=head;
+    while(cur_odd->next&&cur_odd->next->next){
+        Node*next_even=cur_odd->next;
+        cur_odd->next=cur_odd->next->next;
+        next_even->next=next_even->next->next;
+        cur_odd=cur_odd->next;
+        if(length%2==1)
+            tail=next_even;
+    }
+    debug_verify_data_integrity();
+}
+void LinkedList::insert_alternate(LinkedList &another) {
+    if(!another.length)
+        return;
+    if(!length){
+        head=another.head;
+        tail=another.tail;
+        length=another.length;
+        debug_data=another.debug_data;
+    }else{
+        Node*cur2=another.head;
+        for(Node*cur1=head;cur1&&cur2;){
+            Node*cur2_next_temp=cur2->next;
+            insert_after(cur1,cur2);
+            another.length--;
+            cur2=cur2_next_temp;
+            if(cur1==tail){
+                tail=another.tail;
+                cur1->next->next=cur2;
+                length+=another.length;
+                break;
+            }
+            cur1=cur1->next->next;
+        }
+    }
+}
+
+void LinkedList::insert_after(Node *src, Node *target) {
+    assert(src&&target);
+    target->next=src->next;
+    src->next=target;
+    debug_add_node(target);
+    ++length;
+}
