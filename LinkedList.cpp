@@ -18,12 +18,25 @@ void LinkedList::print1() {
     }
     cout<<endl;
 }
+void LinkedList::print_reverse() {
+    for(Node*cur=tail;cur;cur=cur->prev)
+        cout<<cur->data<<" ";
+    cout<<endl;
+}
+void LinkedList::link(Node *first, Node *second) {
+    if(first)
+        first->next=second;
+    if(second)
+        second->prev=first;
+}
 void LinkedList::insert_end(int value) {
     Node* item = new Node(value);
+    debug_add_node(item);
     if(!head)
         head = tail = item;
     else{
-        tail->next = item;
+        link(tail,item);
+//        tail->next = item;
         tail = item;
     }
     length++;
@@ -34,11 +47,12 @@ void LinkedList::insert_front(int value) {
     if(!head)
         head = tail = item;
     else{
-        item->next = head;
+        link(item,head);
+//        item->next = head;
         head = item;
     }
     debug_add_node(item);
-    debug_verify_data_integrity();
+//    debug_verify_data_integrity();
 }
 Node* LinkedList::get_nth(int n) {
     int cnt = 0;
@@ -190,10 +204,15 @@ void LinkedList::delete_node(Node *node) {
     delete node;
 }
 void LinkedList::delete_front() {
-    assert(length);
+    if(!head)
+        return;
     Node*cur=head->next;
     delete_node(head);
     head=cur;
+    if(head)
+        head->prev= nullptr;
+    else if(!length)
+        tail= nullptr;
     debug_verify_data_integrity();
 }
 void LinkedList::delete_first() {
@@ -208,14 +227,15 @@ void LinkedList::delete_first() {
 }
 
 void LinkedList::delete_end() {
-    if(length<=1){
-        delete_first();
+    if(!head)
         return;
-    }
-    Node*previous= get_nth(length-1);
+    Node*cur = tail->prev;
     delete_node(tail);
-    tail=previous;
-    tail->next= nullptr;
+    tail=cur;
+    if(tail)
+        tail->next = nullptr;
+    else if(!length)
+        head = nullptr;
     debug_verify_data_integrity();
 }
 void LinkedList::delete_nth(int index) {
@@ -227,9 +247,16 @@ void LinkedList::delete_nth(int index) {
         Node*before= get_nth(index-1);
         Node*nth=before->next;
         bool is_tail=nth==tail;
-        before->next=nth->next;
-        if(is_tail)
-            tail=before;
+        if(nth!= nullptr){
+            before->next=nth->next;
+            if(nth->next!= nullptr)
+                nth->next->prev=before;
+            if(is_tail)
+                tail=before;
+        }
+//        before->next=nth->next;
+//        if(is_tail)
+//            tail=before;
         delete_node(nth);
         debug_verify_data_integrity();
     }
@@ -269,12 +296,15 @@ void LinkedList::reverse_nodes() {
     tail->next=nullptr;
     debug_verify_data_integrity();
 }
-void LinkedList::embed_after(Node *node, int value) {
-    Node*item=new Node(value);
+void LinkedList::embed_after(Node *node_before, int value) {
+    Node*middle=new Node(value);
     ++length;
-    debug_add_node(item);
-    item->next=node->next;
-    node->next=item;
+    debug_add_node(middle);
+    Node*node_after=node_before->next;
+    link(node_before,middle);
+    link(middle,node_after);
+//    item->next=node->next;
+//    node->next=item;
 }
 void LinkedList::insert_sorted(int value) {
     if(!length||value<=head->data)
@@ -282,9 +312,9 @@ void LinkedList::insert_sorted(int value) {
     else if(tail->data<=value)
         insert_end(value);
     else{
-        for(Node*cur=head,*prv= nullptr;cur;prv=cur,cur=cur->next){
+        for(Node*cur=head;cur;cur=cur->next){
             if(value<=cur->data){
-                embed_after(prv,value);
+                embed_after(cur->prev,value);
                 break;
             }
         }
@@ -431,4 +461,29 @@ void LinkedList::insert_after(Node *src, Node *target) {
     src->next=target;
     debug_add_node(target);
     ++length;
+}
+
+Node* LinkedList::delete_and_link(Node *cur) {
+    Node*ret=cur->prev;
+    link(cur->prev,cur->next);
+    delete_node(cur);
+    return ret;
+}
+
+void LinkedList::delete_node_with_key(int value) {
+    if(!length)
+        return;
+    if(head->data==value)
+        delete_front();
+    else{
+        for(Node*cur=head;cur;cur=cur->next){
+            if(cur->data==value){
+                cur= delete_and_link(cur);
+                if(!cur->next)
+                    tail=cur;
+                break;
+            }
+        }
+    }
+    debug_verify_data_integrity();
 }

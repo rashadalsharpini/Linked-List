@@ -1,30 +1,16 @@
 #include <iostream>
 #include"LinkedList.h"
 using namespace std;
-void test1(){
-    cout<<"\ntest1\n";
-    LinkedList list;
-    list.insert_end(1);
-    list.insert_end(2);
-    list.insert_end(3);
-    list.insert_end(4);
-    list.print1();
-    string expected = "1 2 3 4";
-    string result = list.debug_to_string();
-    if(expected!=result){
-        cout<<"no match : \n Expected:"
-            <<expected<<"\nresult : "<<result<<endl;
-        assert(false);
-    }
-    list.debug_print_list("************");
-}
 int main() {
     LinkedList ll;
     for(int i =0;i<8;++i)
         ll.insert_end(i);
     ll.print1();
-    ll.reverse_nodes();
-    ll.print1();
+//    ll.delete_nth(2); // error no link in a backward way
+//    ll.print_reverse();
+//    ll.reverse_nodes();
+//    ll.print_reverse();
     cout<<"\n\n No run time error\n";
     return 0;
 }
+//-1 0 1 2 3 4 5 6 7

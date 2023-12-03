@@ -9,14 +9,19 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-#include<climits>
+#include <climits>
 using namespace std;
 struct Node{
-    int data;
-    Node* next;
+    int data{};
+    Node* next{};
+    Node* prev{};
     Node(int data) : data(data){};
     ~Node(){
         cout << "Destroy value: "<<data<<" at address "<<this<<endl;
+    }
+    void set(Node*next,Node*prev){
+        this->next=next;
+        this->prev=prev;
     }
 };
 class LinkedList {
@@ -30,7 +35,9 @@ public:
     LinkedList(const LinkedList&) = delete;
     LinkedList&operator=(const LinkedList &another) = delete;
     ~LinkedList();
+    void link(Node*first,Node*second);
     void print1();
+    void print_reverse();
     void insert_end(int value);
     void insert_front(int value);
     Node* get_nth(int n);
@@ -68,6 +75,8 @@ public:
     void odd_pos_even_pos();
     void insert_alternate(LinkedList&another);
     void insert_after(Node*src,Node*target);
+    Node* delete_and_link(Node*cur);
+    void delete_node_with_key(int value);
 };
 
 
