@@ -36,7 +36,6 @@ void LinkedList::insert_end(int value) {
         head = tail = item;
     else{
         link(tail,item);
-//        tail->next = item;
         tail = item;
     }
     length++;
@@ -48,18 +47,15 @@ void LinkedList::insert_front(int value) {
         head = tail = item;
     else{
         link(item,head);
-//        item->next = head;
         head = item;
     }
-    debug_add_node(item);
-//    debug_verify_data_integrity();
+    length++;
 }
-Node* LinkedList::get_nth(int n) {
+Node* LinkedList::get_nth(int index) {
     int cnt = 0;
-    for(Node*cur = head;cur;cur = cur->next)
-        if(++cnt == n)
+    for (Node *cur = head; cur; cur = cur->next)
+        if (cnt++ == index)
             return cur;
-
     return nullptr;
 }
 int LinkedList::Search(int value) {
@@ -69,7 +65,7 @@ int LinkedList::Search(int value) {
             return index;
     return -1;
 }
-int LinkedList::improvedSearchV1(int value) {
+int LinkedList::improvedSearchV1(int value) { //not now
     int index = 0;
     Node* previous = nullptr;
     for(Node* cur =head;cur;cur=cur->next,index++) {
@@ -171,7 +167,7 @@ void LinkedList::debug_print_list(string msg) {
 Node* LinkedList::get_nth_back(int n) {
     if(length<n)
         return nullptr;
-    return get_nth(length - n + 1);
+    return get_nth(length - (n + 1));
 }
 bool LinkedList::is_same1(const LinkedList &other) {
     Node*h1=head,*h2=other.head;
@@ -199,7 +195,6 @@ void LinkedList::add_element(int value) {
     head=item;
 }
 void LinkedList::delete_node(Node *node) {
-    debug_remove_node(node);
     --length;
     delete node;
 }
@@ -213,7 +208,6 @@ void LinkedList::delete_front() {
         head->prev= nullptr;
     else if(!length)
         tail= nullptr;
-    debug_verify_data_integrity();
 }
 void LinkedList::delete_first() {
     if(head){
@@ -236,40 +230,22 @@ void LinkedList::delete_end() {
         tail->next = nullptr;
     else if(!length)
         head = nullptr;
-    debug_verify_data_integrity();
 }
 void LinkedList::delete_nth(int index) {
-    if(index<1||index>length)
+    if(index<0||index>length)
         cout<<"Error. No such nth node\n";
-    else if(index==1)
-        delete_first();
+    else if(index==0)
+        delete_front();
+    else if(index==length-1)
+        delete_end();
     else{
-        Node*before= get_nth(index-1);
-        Node*nth=before->next;
-        bool is_tail=nth==tail;
-        if(nth!= nullptr){
-            before->next=nth->next;
-            if(nth->next!= nullptr)
-                nth->next->prev=before;
-            if(is_tail)
-                tail=before;
-        }
-//        before->next=nth->next;
-//        if(is_tail)
-//            tail=before;
-        delete_node(nth);
-        debug_verify_data_integrity();
+        Node*cur = get_nth(index);
+        link(cur->prev,cur->next);
+        delete_node(cur);
     }
 }
 void LinkedList::delete_value(int value) {
-    int cnt = 0;
-    for(Node*cur=head;cur;cur=cur->next){
-        cnt++;
-        if(cur->data==value)
-            break;
-
-    }
-    delete_nth(cnt);
+    delete_nth(Search(value));
 }
 void LinkedList::swap_pair() {
     for(Node*cur=head;cur;cur=cur->next){
@@ -280,7 +256,7 @@ void LinkedList::swap_pair() {
         }
     }
 }
-void LinkedList::reverse_nodes() {
+void LinkedList::reverse_nodes() { //single linked list
     if(length<=1)
         return;
     tail=head;
@@ -294,7 +270,6 @@ void LinkedList::reverse_nodes() {
     }
     head=prv;
     tail->next=nullptr;
-    debug_verify_data_integrity();
 }
 void LinkedList::embed_after(Node *node_before, int value) {
     Node*middle=new Node(value);
@@ -319,7 +294,6 @@ void LinkedList::insert_sorted(int value) {
             }
         }
     }
-    debug_verify_data_integrity();
 }
 void LinkedList::swap_head_tail() {
     if(!head||!head->next)

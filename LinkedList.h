@@ -35,6 +35,9 @@ public:
     LinkedList(const LinkedList&) = delete;
     LinkedList&operator=(const LinkedList &another) = delete;
     ~LinkedList();
+    void printlength(){
+        cout<<length<<endl;
+    }
     void link(Node*first,Node*second);
     void print1();
     void print_reverse();
