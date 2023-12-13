@@ -2,11 +2,14 @@
 #include"LinkedList.h"
 using namespace std;
 int main() {
-    LinkedList ll;
-    for(int i =0;i<10;++i)
-        ll.insert_end(i);
+    LinkedList<string> ll;
+    for(int i =0;i<10;++i) {
+        string test;
+        cin >> test;
+        ll.insert_end(test);
+    }
     ll.print1();
-    ll.reverse_nodes();
+//    ll.reverse_nodes();
     ll.print_reverse();
     ll.print1();
 
