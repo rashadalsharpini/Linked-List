@@ -41,7 +41,7 @@ public:
         cout<<length<<endl;
     }
     void link(Node<T>*first,Node<T>*second);
-    void print1();
+    void print();
     void print_reverse();
     void insert_end(T value);
     void insert_front(T value);

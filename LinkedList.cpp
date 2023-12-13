@@ -20,7 +20,7 @@ LinkedList<T>::~LinkedList() {
     }
 }
 template <typename T>
-void LinkedList<T>::print1() {
+void LinkedList<T>::print() {
     for(Node<T>*cur=head;cur;cur = cur->next){
         cout<<cur->data<<" ";
     }
@@ -373,7 +373,7 @@ void LinkedList<T>::remove_duplicates_from_not_sorted() {
     }
     debug_verify_data_integrity();
 }
-template <typename T>
+/*template <typename T>
 void LinkedList<T>::delete_last_occurence(int target) {
     if(!length)
         return;
@@ -389,7 +389,7 @@ void LinkedList<T>::delete_last_occurence(int target) {
             delete_front();
     }
     debug_verify_data_integrity();
-}
+}*/
 template <typename T>
 void LinkedList<T>::delete_next_node(Node<T> *node) {
     Node<T>* to_delete = node->next;
@@ -399,7 +399,7 @@ void LinkedList<T>::delete_next_node(Node<T> *node) {
     if(tail)
         tail = node;
 }
-template <typename T>
+/*template <typename T>
 void LinkedList<T>::move_key_occurance_to_end(int key) {
     if(length<=1)
         return;
@@ -411,7 +411,7 @@ void LinkedList<T>::move_key_occurance_to_end(int key) {
             prv=cur,cur=cur->next;
     }
     debug_verify_data_integrity();
-}
+}*/
 template <typename T>
 Node<T> *LinkedList<T>::move_to_end(Node<T> *cur, Node<T> *prv){
     Node<T>* next = cur->next;
@@ -424,14 +424,14 @@ Node<T> *LinkedList<T>::move_to_end(Node<T> *cur, Node<T> *prv){
     tail->next = nullptr;
     return next;
 }
-template <typename T>
+/*template <typename T>
 int LinkedList<T>::max(Node<T> *head, bool is_first_call) {
     if(is_first_call)
         return this->max(this->head,false);
     if(head== nullptr)
         return INT_MIN;
     return std::max(head->data,this->max(head->next,false));
-}
+}*/
 template <typename T>
 void LinkedList<T>::odd_pos_even_pos() {
     if(length<=2)
